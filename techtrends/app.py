@@ -1,7 +1,9 @@
 import sqlite3
+import logging
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
+
 
 # Variable to store the total amount of connections to the database
 databaseConnectionsCount = 0
@@ -53,8 +55,10 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
+        app.logger.info('Article Not Found')
         return render_template('404.html'), 404
     else:
+        app.logger.info('Article "' + post['title'] + '" retrieved!')
         return render_template('post.html', post=post)
 
 # Define the About Us page
@@ -62,6 +66,8 @@ def post(post_id):
 
 @app.route('/about')
 def about():
+
+    app.logger.info('The "About Us" page is retrieved')
     return render_template('about.html')
 
 # Define the post creation functionality
@@ -83,6 +89,7 @@ def create():
             connection.close()
             global databaseConnectionsCount
             databaseConnectionsCount += 1
+            app.logger.info('Article "' + title + '" created!')
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -122,4 +129,8 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
+
+    # stream logs to app.log file
+    logging.basicConfig(filename='app.log', level=logging.DEBUG)
+
     app.run(host='0.0.0.0', port='3111')
