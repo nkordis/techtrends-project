@@ -3,6 +3,9 @@ import sqlite3
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
 
+# Variable to store the total amount of connections to the database
+databaseConnectionsCount = 0
+
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 
@@ -20,6 +23,9 @@ def get_post(post_id):
     post = connection.execute('SELECT * FROM posts WHERE id = ?',
                               (post_id,)).fetchone()
     connection.close()
+    global databaseConnectionsCount
+    databaseConnectionsCount += 1
+
     return post
 
 
@@ -35,6 +41,8 @@ def index():
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
     connection.close()
+    global databaseConnectionsCount
+    databaseConnectionsCount += 1
     return render_template('index.html', posts=posts)
 
 # Define how each individual article is rendered
@@ -73,7 +81,8 @@ def create():
                                (title, content))
             connection.commit()
             connection.close()
-
+            global databaseConnectionsCount
+            databaseConnectionsCount += 1
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -85,6 +94,25 @@ def create():
 def status():
     response = app.response_class(
         response=json.dumps({"result": "OK - healthy"}),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
+
+# Define the metrics endpoint
+
+
+@app.route('/metrics')
+def metrics():
+    connection = get_db_connection()
+    posts_num = connection.execute('SELECT * FROM posts').fetchall()
+    connection.close()
+    global databaseConnectionsCount
+    databaseConnectionsCount += 1
+    response = app.response_class(
+        response=json.dumps(
+            {"db_connection_count": databaseConnectionsCount, "post_count": len(posts_num)}),
         status=200,
         mimetype='application/json'
     )
