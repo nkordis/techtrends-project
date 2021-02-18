@@ -5,7 +5,24 @@ docker build -t techtrends .
 docker run -d -p 7111:3111 techtrends
 
 ## Docker commands used to get the application logs
-# TODO: insert the docker logs command
+docker ps
+docker logs CONTAINER_ID
 
 ## Logs from the container running the TechTrends application
-# TODO: paste logs from the Docker container 
+
+INFO:werkzeug: * Running on http://0.0.0.0:3111/ (Press CTRL+C to quit)
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:34:38] "GET / HTTP/1.1" 200 -
+INFO:app:The "About Us" page is retrieved
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:34:42] "GET /about HTTP/1.1" 200 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:34:59] "GET /healthz HTTP/1.1" 200 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:05] "GET /metrics HTTP/1.1" 200 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:27] "GET / HTTP/1.1" 200 -
+INFO:app:Article "KubeCon + CloudNativeCon 2021" retrieved!
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:29] "GET /2 HTTP/1.1" 200 -
+INFO:app:Article Not Found
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:39] "GET /20 HTTP/1.1" 404 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:41] "GET /create HTTP/1.1" 200 -
+INFO:app:Article "Test" created!
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:59] "POST /create HTTP/1.1" 302 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:35:59] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:172.17.0.1 - - [18/Feb/2021 22:36:02] "GET / HTTP/1.1" 200 - 
