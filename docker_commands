@@ -5,8 +5,7 @@ docker build -t techtrends .
 docker run -d -p 7111:3111 techtrends
 
 ## Docker commands used to get the application logs
-docker ps
-docker logs CONTAINER_ID
+docker logs -f $$(docker ps | grep <CONTAINER_NAME> | tr " " "\n" | tail -1)
 
 ## Logs from the container running the TechTrends application
 
