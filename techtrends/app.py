@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import sys
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
@@ -129,7 +130,12 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
-
-    logging.basicConfig(level=logging.DEBUG)
+    stdoutHandler = logging.StreamHandler(sys.stdout)  # stdout handler
+    stderrHandler = logging.StreamHandler(sys.stderr)  # stderr handler
+    handlers = [stderrHandler, stdoutHandler]
+    # format output
+    formatOutput = '%(levelname)s: %(name)-2s - [%(asctime)s] - %(message)s'
+    logging.basicConfig(format=formatOutput,
+                        level=logging.DEBUG, handlers=handlers)
 
     app.run(host='0.0.0.0', port='3111')
